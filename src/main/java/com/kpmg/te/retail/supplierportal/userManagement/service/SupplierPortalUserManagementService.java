@@ -12,21 +12,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kpmg.te.retail.supplierportal.userManagement.controller.SupplierPortalController;
+import com.kpmg.te.retail.supplierportal.userManagement.controller.SupplierPortalUserManagementController;
 import com.kpmg.te.retail.supplierportal.userManagement.entity.SupplierSite;
 import com.kpmg.te.retail.supplierportal.userManagement.entity.UserMaster;
 import com.kpmg.te.retail.supplierportal.userManagement.entity.ViewUserHomePage;
-import com.kpmg.te.retail.supplierportal.userManagement.manager.SupplierPortalLoginManager;
+import com.kpmg.te.retail.supplierportal.userManagement.manager.SupplierPortalUserManagementManager;
 
 @RestController
 @RequestMapping("/api/usermgmt/service/")
 public class SupplierPortalUserManagementService {
 	
 	@Autowired
-	SupplierPortalController supplierPortalLogincontroller;
+	SupplierPortalUserManagementController supplierPortalUserManagementController;
 	
 	@Autowired
-	SupplierPortalLoginManager supplierPortalLoginmanager;
+	SupplierPortalUserManagementManager supplierPortalUserManagementManager;
 	
 	
 	private static final Logger logger = Logger.getLogger(SupplierPortalUserManagementService.class.getName());
@@ -36,17 +36,17 @@ public class SupplierPortalUserManagementService {
 	/**************************************************************************************************************************************************************************/
 	@RequestMapping(path = "/user/vieweUserMaster", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ViewUserHomePage viewUserDetails() throws ClassNotFoundException, SQLException {
-		return supplierPortalLogincontroller.viewUserData();
+		return supplierPortalUserManagementController.viewUserData();
 	}
 	
 	@RequestMapping(path = "/user/getUserDetails", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public UserMaster getUserDetails(@RequestParam String userId) throws ClassNotFoundException, SQLException {
-		return supplierPortalLogincontroller.getUserDetails(userId);
+		return supplierPortalUserManagementController.getUserDetails(userId);
 	}
 	
 	@RequestMapping(path = "/user/editUserDetails", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE )
 	public String editUserDetails(@RequestBody UserMaster userMaster) throws ClassNotFoundException, SQLException {
-		return supplierPortalLogincontroller.updateUserDetails(userMaster);
+		return supplierPortalUserManagementController.updateUserDetails(userMaster);
 	}
 	
 
@@ -59,13 +59,13 @@ public class SupplierPortalUserManagementService {
 public String createNewUser(@RequestBody UserMaster userMaster) throws ClassNotFoundException, SQLException {
 	String creationStatus;
 	logger.info("The User Master Obj to display is: " + userMaster.toString());
-	creationStatus = supplierPortalLogincontroller.createNewUser(userMaster);
+	creationStatus = supplierPortalUserManagementController.createNewUser(userMaster);
 	return creationStatus;
 }
 
 	@RequestMapping(path = "/user/deleteUserDetails", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
 	public String deleteUser(@RequestParam String userName) throws ClassNotFoundException, SQLException {
-		return supplierPortalLogincontroller.deleteUser(userName);
+		return supplierPortalUserManagementController.deleteUser(userName);
 	}
 	
 	/************************************************************************************************************************************************************************** */
@@ -74,26 +74,26 @@ public String createNewUser(@RequestBody UserMaster userMaster) throws ClassNotF
 	@RequestMapping(path = "/sites/getAllSupplierSites", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ArrayList<SupplierSite> getAllSupplierSites() throws ClassNotFoundException, SQLException {
 		ArrayList<SupplierSite> siteList = new ArrayList<SupplierSite>();
-		siteList = supplierPortalLogincontroller.getAllSiteData();
+		siteList = supplierPortalUserManagementController.getAllSiteData();
 		logger.info("The Site List to display is: " + siteList.toString());
 		return siteList;
 	}
 
 	@RequestMapping(path = "/sites/editSupplierSite", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String editSupplierSite(@RequestBody SupplierSite supplierSite) throws ClassNotFoundException, SQLException {
-		return supplierPortalLogincontroller.updateSuppliersiteData(supplierSite);
+		return supplierPortalUserManagementController.updateSuppliersiteData(supplierSite);
 	}
 
 	@RequestMapping(path = "/sites/deleteSupplierSite", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String deleteSupplierSite(@RequestParam String supplierSiteName)
 			throws ClassNotFoundException, SQLException {
-		return supplierPortalLogincontroller.deleteSuppliersiteData(supplierSiteName);
+		return supplierPortalUserManagementController.deleteSuppliersiteData(supplierSiteName);
 	}
 
 	@RequestMapping(path = "/sites/addNewSupplierSite", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public String addNewSupplierSite(@RequestBody SupplierSite supplierSite)
 			throws ClassNotFoundException, SQLException {
-		return supplierPortalLogincontroller.createSuppliersiteData(supplierSite);
+		return supplierPortalUserManagementController.createSuppliersiteData(supplierSite);
 	}
 
 
