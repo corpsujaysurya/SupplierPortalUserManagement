@@ -64,8 +64,8 @@ public String createNewUser(@RequestBody UserMaster userMaster) throws ClassNotF
 }
 
 	@RequestMapping(path = "/user/deleteUserDetails", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE )
-	public String deleteUser(@RequestParam String userName) throws ClassNotFoundException, SQLException {
-		return supplierPortalUserManagementController.deleteUser(userName);
+	public String deleteUser(@RequestParam String userId) throws ClassNotFoundException, SQLException {
+		return supplierPortalUserManagementController.deleteUser(userId);
 	}
 	
 	/************************************************************************************************************************************************************************** */
@@ -110,7 +110,6 @@ public String createNewUser(@RequestBody UserMaster userMaster) throws ClassNotF
 			throws ClassNotFoundException, SQLException {
 		return supplierPortalUserManagementController.setNewPwd(userId,newPassword);
 	}
-	
 	
 	  @RequestMapping(path = "user/updateProfile", method = RequestMethod.POST,
 	  produces = MediaType.APPLICATION_JSON_VALUE) public String

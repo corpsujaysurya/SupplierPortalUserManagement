@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.kpmg.te.retail.supplierportal.userManagement.constants.SQLConstants;
 import com.kpmg.te.retail.supplierportal.userManagement.entity.SupplierSite;
 import com.kpmg.te.retail.supplierportal.userManagement.entity.UserMaster;
+import com.kpmg.te.retail.supplierportal.userManagement.manager.EmailServiceUtils;
 import com.kpmg.te.retail.supplierportal.userManagement.utils.UserManagementUtils;
 
 @Component
@@ -25,6 +26,9 @@ public class SupplierPortalUserManagementDao {
 	
 	@Autowired
 	UserManagementUtils umUtils;
+	
+	@Autowired
+	EmailServiceUtils emailUtils;
 
 	public Connection getConnectioDetails() throws ClassNotFoundException, SQLException {
 		String myDriver = SQLConstants.myDriver;
@@ -94,18 +98,19 @@ public class SupplierPortalUserManagementDao {
 	
 /*******************************************************************************************************************************************************/	
 	
-	public UserMaster getUserDetails(String userName) throws ClassNotFoundException, SQLException {
+	public UserMaster getUserDetails(String userId) throws ClassNotFoundException, SQLException {
 		UserMaster um = new UserMaster();
 		Connection conn = getConnectioDetails();
-		String query = "SELECT  * from SUPPLIER_PORTAL.SUPPLIER_USER_MASTER WHERE USER_NAME='"+ userName +"'";
+		String query = "SELECT  * from SUPPLIER_PORTAL.SUPPLIER_USER_MASTER WHERE USER_ID='"+ userId +"'";
 		Statement st = conn.createStatement();
 		ResultSet rs = st.executeQuery(query);
 		while (rs.next()) {
 			um.setUserMapping(rs.getString("USER_MAPPING"));
-			um.setUserId(rs.getString("user_id"));
+			um.setUsername(rs.getString("user_name"));
 			um.setEmailId(rs.getString("user_email"));
 			um.setMobileNumber(rs.getString("user_mobile"));
-			um.setUsername(userName);
+			um.setIsAdminFlag(rs.getString("is_admin"));
+			um.setUserId(userId);
 		}
 		logger.info("User Details is: " + um.toString());
 		return um;
@@ -114,13 +119,15 @@ public class SupplierPortalUserManagementDao {
 public String updateUserDetails(UserMaster userMaster) throws ClassNotFoundException, SQLException {
 	String updateStatus;
 	Connection conn = getConnectioDetails();
-	String query = "UPDATE SUPPLIER_PORTAL.SUPPLIER_USER_MASTER SET USER_EMAIL = ?,USER_MOBILE = ?, USER_MAPPING = ?  WHERE USER_NAME = ?  ";
+	String query = "UPDATE SUPPLIER_PORTAL.SUPPLIER_USER_MASTER SET USER_EMAIL = ?,USER_MOBILE = ?, USER_MAPPING = ?,USER_NAME=?,IS_ADMIN=?  WHERE USER_ID = ?  ";
 	logger.info(query);
 	PreparedStatement pstmt = conn.prepareStatement(query);
 	pstmt.setString(1, userMaster.getEmailId());
 	pstmt.setString(2, userMaster.getMobileNumber());
 	pstmt.setString(3, userMaster.getUserMapping());
 	pstmt.setString(4, userMaster.getUsername());
+	pstmt.setString(5, userMaster.getIsAdminFlag());
+	pstmt.setString(6, userMaster.getUserId());
 	int updateStatusCode = pstmt.executeUpdate();
 	logger.info(Integer.toString(updateStatusCode));
 	updateStatus = (updateStatusCode == 1) ? ("SUCCESS") : ("FAILURE");
@@ -131,7 +138,7 @@ public String updateUserDetails(UserMaster userMaster) throws ClassNotFoundExcep
 public String deleteUser(String userName) throws SQLException, ClassNotFoundException {
 	String deleteStatus;
 	Connection conn = getConnectioDetails();
-	String query = "DELETE FROM SUPPLIER_PORTAL.SUPPLIER_USER_MASTER WHERE USER_NAME = ?";
+	String query = "DELETE FROM SUPPLIER_PORTAL.SUPPLIER_USER_MASTER WHERE USER_ID = ?";
 	logger.info(query);
 	PreparedStatement pstmt = conn.prepareStatement(query);
 	pstmt.setString(1, userName);
@@ -145,18 +152,26 @@ public String deleteUser(String userName) throws SQLException, ClassNotFoundExce
 public String createUser(UserMaster userMaster) throws ClassNotFoundException, SQLException {
 	String creationStatus;
 	Connection conn = getConnectioDetails();
-	String insertQuery = "INSERT INTO SUPPLIER_PORTAL.SUPPLIER_USER_MASTER(USER_ID, USER_NAME, USER_EMAIL, USER_MOBILE, USER_MAPPING)"
-			+ " VALUES" + "(?, ?, ?, ?, ?)";
+	String userId = umUtils.generateUserId();
+	String randomPwd = umUtils.generateRandomPwd();
+	String insertQuery = "INSERT INTO SUPPLIER_PORTAL.SUPPLIER_USER_MASTER(USER_ID, USER_NAME, USER_EMAIL, USER_MOBILE, USER_MAPPING,IS_ADMIN,DEFAULT_PASSWORD_FLAG,PASSWORD)"
+			+ " VALUES" + "(?, ?, ?, ?, ?, ?, ?, ?)";
 	logger.info(insertQuery);
 	PreparedStatement pstmt = conn.prepareStatement(insertQuery);
-	pstmt.setString(1, userMaster.getUserId());
+	pstmt.setString(1, userId);
 	pstmt.setString(2, userMaster.getUsername());
 	pstmt.setString(3, userMaster.getEmailId());
 	pstmt.setString(4, userMaster.getMobileNumber());
 	pstmt.setString(5, userMaster.getUserMapping());
+	pstmt.setString(6,userMaster.getIsAdminFlag());
+	pstmt.setString(7,"Y");
+	pstmt.setString(8,randomPwd);
 	int updateStatusCode = pstmt.executeUpdate();
 	logger.info(Integer.toString(updateStatusCode));
 	creationStatus = (updateStatusCode == 1) ? ("SUCCESS") : ("FAILURE");
+	if(creationStatus.equalsIgnoreCase("SUCCESS")) {
+		emailUtils.sendEmail(userMaster.getEmailId(),userId,randomPwd);
+	}
 	pstmt.close();
 	return creationStatus;
 }

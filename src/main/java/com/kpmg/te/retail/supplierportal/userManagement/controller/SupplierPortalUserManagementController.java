@@ -45,16 +45,14 @@ public class SupplierPortalUserManagementController {
 		return upadateMsg;
 	}
 
-	public String deleteUser(String userName) throws ClassNotFoundException, SQLException {
+	public String deleteUser(String userId) throws ClassNotFoundException, SQLException {
 		String deleteMsg;
-		deleteMsg = umDao.deleteUser(userName);
+		deleteMsg = umDao.deleteUser(userId);
 		return deleteMsg;
 	}
 
 	public String createNewUser(UserMaster userMaster) throws ClassNotFoundException, SQLException {
-		String creationMsg;
-		creationMsg = umDao.createUser(userMaster);
-		return creationMsg;
+		return umDao.createUser(userMaster);
 	}
 
 	/************************************************************************************************************************************************************************** */
