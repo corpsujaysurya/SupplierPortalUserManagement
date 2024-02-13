@@ -96,6 +96,30 @@ public String createNewUser(@RequestBody UserMaster userMaster) throws ClassNotF
 		return supplierPortalUserManagementController.createSuppliersiteData(supplierSite);
 	}
 
-
+	/************************************************************************************************************************************************************************** */
+	/*													USER MANAGEMENT - USER LOGIN					                                                                       */
+	/**************************************************************************************************************************************************************************/
+	@RequestMapping(path = "user/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public UserMaster userLogin(@RequestParam String userId,@RequestParam String password)
+			throws ClassNotFoundException, SQLException {
+		return supplierPortalUserManagementController.userLogin(userId,password);
+	}
+	
+	@RequestMapping(path = "user/resetPwd", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public String resetPwd(@RequestParam String userId,@RequestParam String newPassword)
+			throws ClassNotFoundException, SQLException {
+		return supplierPortalUserManagementController.setNewPwd(userId,newPassword);
+	}
+	
+	
+	  @RequestMapping(path = "user/updateProfile", method = RequestMethod.POST,
+	  produces = MediaType.APPLICATION_JSON_VALUE) public String
+	  resetPwd(@RequestParam String userId,@RequestParam String userName,@RequestParam String userEmail, @RequestParam String userPhoneNo) throws ClassNotFoundException,
+	  SQLException { 
+		  return supplierPortalUserManagementController.updateProfile(userId,userName,userEmail,userPhoneNo);
+	  }
+	  
+	 
+	
 	
 }

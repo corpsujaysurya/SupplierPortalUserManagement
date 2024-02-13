@@ -232,4 +232,72 @@ public String createSupplierSite(SupplierSite supplierSite) throws SQLException,
 	pstmt.close();
 	return creationStatus;
 }
+
+public UserMaster userLogin(String userId, String password) throws ClassNotFoundException, SQLException {
+	boolean pwdValidationStatus;
+	UserMaster um = new UserMaster();
+	String defaultPwdFlag;
+	String redirectFlag = null;
+	Connection conn = getConnectioDetails();
+	String query = "SELECT  * from supplier_portal.supplier_user_master where user_id='" + userId + "' ";
+	logger.info(query);
+	Statement st = conn.createStatement();
+	ResultSet rs = st.executeQuery(query);
+	while (rs.next()) {
+		String pwd = rs.getString("PASSWORD");
+		logger.info(pwd);
+		logger.info(password);
+		if (password.equals(pwd)) {
+			pwdValidationStatus = true;
+			if (pwdValidationStatus == true) {
+				defaultPwdFlag = rs.getString("DEFAULT_PASSWORD_FLAG");
+				um.setIsAdminFlag(rs.getString("IS_ADMIN"));
+				
+				logger.info(defaultPwdFlag);
+				if (defaultPwdFlag.equalsIgnoreCase("Y")) {
+					redirectFlag = "RESETPWD";
+					um.setRedirectFlag(redirectFlag);
+				} else {
+					redirectFlag = "LOGIN";
+					um.setRedirectFlag(redirectFlag);
+				}
+			}
+		}
+	}
+	return um;
+}
+
+public String setNewPwd(String userId, String newPassword) throws SQLException, ClassNotFoundException {
+	String updateStatus;
+	Connection conn = getConnectioDetails();
+	String query = "UPDATE SUPPLIER_PORTAL.supplier_user_master SET PASSWORD = ?,DEFAULT_PASSWORD_FLAG = ?  WHERE USER_ID = ?  ";
+	logger.info(query);
+	PreparedStatement pstmt = conn.prepareStatement(query);
+	pstmt.setString(1, newPassword);
+	pstmt.setString(2, "N");
+	pstmt.setString(3, userId);
+	int updateStatusCode = pstmt.executeUpdate();
+	logger.info(Integer.toString(updateStatusCode));
+	updateStatus = (updateStatusCode == 1) ? ("SUCCESS") : ("FAILURE");
+	pstmt.close();
+	return updateStatus;
+}
+
+public String updateUserProfile(String userId, String userName, String userEmail, String userPhoneNo) throws SQLException, ClassNotFoundException {
+	String updateStatus;
+	Connection conn = getConnectioDetails();
+	String query = "UPDATE SUPPLIER_PORTAL.supplier_user_master SET USER_NAME = ?,USER_EMAIL = ?, USER_MOBILE=?  WHERE USER_ID = ?  ";
+	logger.info(query);
+	PreparedStatement pstmt = conn.prepareStatement(query);
+	pstmt.setString(1, userName);
+	pstmt.setString(2, userEmail);
+	pstmt.setString(3, userPhoneNo);
+	pstmt.setString(4, userId);
+	int updateStatusCode = pstmt.executeUpdate();
+	logger.info(Integer.toString(updateStatusCode));
+	updateStatus = (updateStatusCode == 1) ? ("SUCCESS") : ("FAILURE");
+	pstmt.close();
+	return updateStatus;
+}
+
 }

@@ -83,4 +83,16 @@ public class SupplierPortalUserManagementController {
 		return creationMsg;
 	}
 
+	public UserMaster userLogin(String userId, String password) throws ClassNotFoundException, SQLException {
+		return umDao.userLogin(userId, password);
+	}
+
+	public String setNewPwd(String userId, String newPassword) throws ClassNotFoundException, SQLException {
+		return umDao.setNewPwd(userId,newPassword);
+	}
+
+	public String updateProfile(String userId, String userName, String userEmail, String userPhoneNo) throws ClassNotFoundException, SQLException {
+		return umDao.updateUserProfile( userId,  userName,  userEmail,  userPhoneNo);
+	}
+
 }
