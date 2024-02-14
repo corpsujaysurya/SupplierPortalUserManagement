@@ -201,13 +201,14 @@ public ArrayList<SupplierSite> getAllSupplierSite() throws SQLException, ClassNo
 public String updateSupplierSite(SupplierSite supplierSite) throws SQLException, ClassNotFoundException {
 	String updateStatus;
 	Connection conn = getConnectioDetails();
-	String query = "UPDATE SUPPLIER_PORTAL.supplier_portal_sites SET site_address = ?,site_location = ?, site_contact = ?  WHERE site_name = ?  ";
+	String query = "UPDATE SUPPLIER_PORTAL.supplier_portal_sites SET site_address = ?,site_location = ?, site_contact = ?,site_name=?  WHERE site_id = ?  ";
 	logger.info(query);
 	PreparedStatement pstmt = conn.prepareStatement(query);
 	pstmt.setString(1, supplierSite.getSiteAddress());
 	pstmt.setString(2, supplierSite.getSiteLocation());
 	pstmt.setString(3, supplierSite.getSiteContact());
 	pstmt.setString(4, supplierSite.getSiteName());
+	pstmt.setString(5, supplierSite.getSiteId());
 	int updateStatusCode = pstmt.executeUpdate();
 	logger.info(Integer.toString(updateStatusCode));
 	updateStatus = (updateStatusCode == 1) ? ("SUCCESS") : ("FAILURE");
@@ -215,13 +216,13 @@ public String updateSupplierSite(SupplierSite supplierSite) throws SQLException,
 	return updateStatus;
 }
 
-public String deleteSupplierSite(String supplierSiteName) throws ClassNotFoundException, SQLException {
+public String deleteSupplierSite(String supplierSiteId) throws ClassNotFoundException, SQLException {
 	String deleteStatus;
 	Connection conn = getConnectioDetails();
-	String query = "DELETE FROM SUPPLIER_PORTAL.supplier_portal_sites WHERE site_name = ?";
+	String query = "DELETE FROM SUPPLIER_PORTAL.supplier_portal_sites WHERE site_id = ?";
 	logger.info(query);
 	PreparedStatement pstmt = conn.prepareStatement(query);
-	pstmt.setString(1, supplierSiteName);
+	pstmt.setString(1, supplierSiteId);
 	int updateStatusCode = pstmt.executeUpdate();
 	logger.info(Integer.toString(updateStatusCode));
 	deleteStatus = (updateStatusCode == 1) ? ("SUCCESS") : ("FAILURE");

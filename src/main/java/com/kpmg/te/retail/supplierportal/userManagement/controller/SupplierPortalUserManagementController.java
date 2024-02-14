@@ -68,9 +68,9 @@ public class SupplierPortalUserManagementController {
 		return updateMsg;
 	}
 
-	public String deleteSuppliersiteData(String supplierSiteName) throws ClassNotFoundException, SQLException {
+	public String deleteSuppliersiteData(String supplierSiteId) throws ClassNotFoundException, SQLException {
 		String deleteMsg;
-		deleteMsg = umDao.deleteSupplierSite(supplierSiteName);
+		deleteMsg = umDao.deleteSupplierSite(supplierSiteId);
 		return deleteMsg;
 	}
 

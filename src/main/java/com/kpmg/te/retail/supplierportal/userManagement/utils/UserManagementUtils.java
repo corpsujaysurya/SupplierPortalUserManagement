@@ -11,7 +11,10 @@ import org.springframework.stereotype.Component;
 public class UserManagementUtils {
 	
 	public  String setRandomUUID() {
-		return UUID.randomUUID().toString();
+		Random random = new Random();
+		String siteId = "SITE-";
+		int x = random.nextInt(900) + 100;
+		 return siteId.concat(Integer.toString(x));
 	}
 	
 	public String generateUserId() {

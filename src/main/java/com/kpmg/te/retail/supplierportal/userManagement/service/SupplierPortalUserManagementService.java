@@ -85,9 +85,9 @@ public String createNewUser(@RequestBody UserMaster userMaster) throws ClassNotF
 	}
 
 	@RequestMapping(path = "/sites/deleteSupplierSite", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public String deleteSupplierSite(@RequestParam String supplierSiteName)
+	public String deleteSupplierSite(@RequestParam String supplierSiteId)
 			throws ClassNotFoundException, SQLException {
-		return supplierPortalUserManagementController.deleteSuppliersiteData(supplierSiteName);
+		return supplierPortalUserManagementController.deleteSuppliersiteData(supplierSiteId);
 	}
 
 	@RequestMapping(path = "/sites/addNewSupplierSite", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
