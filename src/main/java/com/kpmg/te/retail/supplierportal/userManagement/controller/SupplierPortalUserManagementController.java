@@ -24,12 +24,18 @@ public class SupplierPortalUserManagementController {
 	/* USER MANAGEMENT - CREATE / MODIFY / DELETE / VIEW USER DETAILS */
 	/**************************************************************************************************************************************************************************/
 
-	public ViewUserHomePage viewUserData() throws ClassNotFoundException, SQLException {
-		ViewUserHomePage vUh = new ViewUserHomePage();
-		vUh.setUserMasterList(umDao.getBasicUserList());
-		vUh.setModulesList(umDao.getBasicModuleData());
-		vUh.setSupplieSiteList(umDao.getBasicSupplierSiteData());
-		return vUh;
+	/*
+	 * public ViewUserHomePage viewUserData() throws ClassNotFoundException,
+	 * SQLException { ViewUserHomePage vUh = new ViewUserHomePage();
+	 * vUh.setUserMasterList(umDao.getBasicUserList());
+	 * vUh.setModulesList(umDao.getBasicModuleData());
+	 * vUh.setSupplieSiteList(umDao.getBasicSupplierSiteData()); return vUh; }
+	 */
+	
+	public ArrayList<UserMaster> viewUserData() throws ClassNotFoundException, SQLException {
+		ArrayList<UserMaster> usrMasterList = new ArrayList<UserMaster>();
+		usrMasterList = umDao.getUserManagementListingData();
+		return usrMasterList;
 	}
 
 	public UserMaster getUserDetails(String userId) throws ClassNotFoundException, SQLException {

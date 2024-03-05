@@ -95,6 +95,27 @@ public class SupplierPortalUserManagementDao {
 	}
 	
 	
+	public ArrayList<UserMaster> getUserManagementListingData() throws ClassNotFoundException, SQLException {
+		ArrayList<UserMaster> userMasterList = new ArrayList<UserMaster>();
+		UserMaster um = null;
+		Connection conn = getConnectioDetails();
+		String query = "SELECT  * from SUPPLIER_PORTAL.supplier_user_master";
+		Statement st = conn.createStatement();
+		ResultSet rs = st.executeQuery(query);
+		while (rs.next()) {
+			um = new UserMaster();
+			um.setUserId(rs.getString("user_id"));
+			um.setUsername(rs.getString("user_name"));
+			um.setEmailId(rs.getString("user_email"));
+			um.setMobileNumber(rs.getString("user_mobile"));
+			um.setIsAdminFlag(rs.getString("IS_ADMIN"));
+			userMasterList.add(um);
+		}
+		logger.info("UserMasterList: " + userMasterList.toString());
+		return userMasterList;
+	}
+	
+	
 	
 /*******************************************************************************************************************************************************/	
 	

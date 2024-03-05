@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kpmg.te.retail.supplierportal.userManagement.controller.SupplierPortalUserManagementController;
 import com.kpmg.te.retail.supplierportal.userManagement.entity.SupplierSite;
 import com.kpmg.te.retail.supplierportal.userManagement.entity.UserMaster;
-import com.kpmg.te.retail.supplierportal.userManagement.entity.ViewUserHomePage;
 import com.kpmg.te.retail.supplierportal.userManagement.manager.SupplierPortalUserManagementManager;
 
 @RestController
@@ -35,7 +34,8 @@ public class SupplierPortalUserManagementService {
 	/*													USER MANAGEMENT - VIEW /EDIT USER REST END-POINTS                                                                      */
 	/**************************************************************************************************************************************************************************/
 	@RequestMapping(path = "/user/vieweUserMaster", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ViewUserHomePage viewUserDetails() throws ClassNotFoundException, SQLException {
+	public ArrayList<UserMaster> viewUserDetails() throws ClassNotFoundException, SQLException {
+		logger.info("Hello world");
 		return supplierPortalUserManagementController.viewUserData();
 	}
 	
